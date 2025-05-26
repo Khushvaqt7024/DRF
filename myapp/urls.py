@@ -1,8 +1,14 @@
 from django.urls import path
-from .views import HelloAPIView, UserDetailAPIView
+from rest_framework.routers import DefaultRouter
 
-urlpatterns = [
-    path('hello/', HelloAPIView.as_view(), name='hello'),
-    path('users/<int:pk>/', UserDetailAPIView.as_view())
-]
+from .views import HelloAPIView, UserDetailAPIView, UserViewSet
 
+# urlpatterns = [
+#     path('hello/', HelloAPIView.as_view(), name='hello'),
+#     path('users/<int:pk>/', UserDetailAPIView.as_view())
+# ]
+
+router = DefaultRouter()
+router.register('users', UserViewSet)
+
+urlpatterns = router.urls
