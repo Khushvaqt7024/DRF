@@ -1,6 +1,7 @@
 from warnings import filters
 
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -15,7 +16,7 @@ class HelloAPIView(APIView):
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
+from rest_framework import status, viewsets
 from .models import User
 from .serializers import UserSerializer
 from rest_framework.viewsets import GenericViewSet
@@ -68,19 +69,30 @@ class UserDetailAPIView(APIView):
         user.delete()
         return Response({'deleted': True}, status=204)
 
-class UserViewSet(ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+# class UserViewSet(ModelViewSet):
+#     queryset = User.objects.all()
+#     serializer_class = UserSerializer
 
-    @action(detail=True, methods=['get'])
-    def full_name(self, request, pk=None):
-        user = self.get_object()
-        full_name = f"{user.first_name} {user.last_name}"
-        return Response({'full_name': full_name})
+    # @action(detail=True, methods=['get'])
+    # def full_name(self, request, pk=None):
+    #     user = self.get_object()
+    #     full_name = f"{user.first_name} {user.last_name}"
+    #     return Response({'full_name': full_name})
 
 class UserListCreateViewSet(ListModelMixin, CreateModelMixin, GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
 
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = [IsAuthenticated]
+
+
+    def get_permissions(selfs):
+        if self.action == 'list':
+            return [AllowAny()]
+        return [IsAuthenticated()]
 
 
