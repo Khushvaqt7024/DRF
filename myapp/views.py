@@ -1,3 +1,6 @@
+from warnings import filters
+
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
@@ -78,4 +81,6 @@ class UserViewSet(ModelViewSet):
 class UserListCreateViewSet(ListModelMixin, CreateModelMixin, GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+
 
