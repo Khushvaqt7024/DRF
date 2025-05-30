@@ -5,6 +5,8 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from rest_framework import generics
+
 
 
 def get(request):
@@ -96,3 +98,12 @@ class UserViewSet(viewsets.ModelViewSet):
         return [IsAuthenticated()]
 
 
+class NotificationSerializer:
+    pass
+
+
+class NotificationListView(generics.ListAPIView):
+    serializer_class = NotificationSerializer
+
+    def get_queryset(self):
+        return Notification.objects.filter(user=self.request.user).order_by('-created_at')
